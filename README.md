@@ -7,7 +7,16 @@ Go to your working directory and run:
 git clone https://github.com/singharchit97/Calculate_Z-Score_GWAS && cd Calculate_Z-Score_GWAS/
 ```
 
-### Run the script
+### Configure the container
+To run the commands the user will need a container that contains a number of R-libraries.
+
+#### Building the container
+If the user wants to build the container:
+```bash
+export SINGULARITY_PATH="/path/to/singularity-executable"
+sudo $SINGULARITY_PATH/singularity build  z-score.sif container/Singularity
+```
+### Run the script (without singularity container)
 Run the below command to see the help message on the input and output parameters required to run the script.
 Note that all parameters are mandatory.
 ```bash
@@ -17,5 +26,14 @@ Dummy command given below:
 ```bash
 Rscript calc_z-score.R -f input_summary_statistics.txt -i input.snplist -s standard_error -b odds_ratio -v rs_id -z output.txt
 ```
-
+### Run the script (with singularity container)
+Run the below command to see the help message on the input and output parameters required to run the script.
+Note that all parameters are mandatory.
+```bash
+singularity exec -B /mount/working/directory z-score.sif Rscript calc_z-score.R --help
+```
+Dummy command given below:
+```bash
+singularity exec -B /mount/working/directory z-score.sif Rscript calc_z-score.R -f input_summary_statistics.txt -i input.snplist -s standard_error -b odds_ratio -v rs_id -z output.txt
+```
 The script runs in the `Calculate_Z-Score_GWAS` directory, it will create a output text file (name as given by the user), respectively.
