@@ -12,7 +12,7 @@ p <-
 p <-
   add_argument(p, "--std-error", help = "Column name for Standard-error")
 p <-
-  add_argument(p, "--odds-ration", help = "Column name for Odds-ratio")
+  add_argument(p, "--beta", help = "Column name for Odds-ratio")
 p <-
   add_argument(p, "--variant-id", help = "Column name for SNP id")
 p <- add_argument(p, "--z-file-name", help = "Output file name")
@@ -24,10 +24,10 @@ snp_list <- fread(argv$i, header = FALSE)
 colnames(snp_list) <- c(argv$v)
 data_summary_stats_subset <-
   semi_join(data_summary_stats, snp_list, by = argv$v)
-dim(data_summary_stats_subset)
-print(data_summary_stats_subset)
-odds_ratio <- c(argv$o)
+odds_ratio <- c(argv$b)
+print(odds_ratio)
 std_error <- c(argv$s)
+print(std_error)
 calc_z_score <-
   function(...) {
     data_summary_stats_subset[[odds_ratio]] <-
