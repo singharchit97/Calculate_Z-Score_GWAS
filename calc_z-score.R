@@ -1,25 +1,49 @@
 #!/usr/bin/Rscript
-library(argparser)
-library(methods)
+suppressPackageStartupMessages(library(argparser))
+suppressPackageStartupMessages(library(methods))
+suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages(library(dplyr))
 
 p <- arg_parser("Calculate Z-score for SNPs")
-p <- add_argument(p, "--file-name", help = "Name of the summary statistics file")
-p <- add_argument(p, "--id-snplist-file", help = "file with list of SNPs for which Z-score will be calculated")
-p <- add_argument(p, "--std-error", help = "Column name for Standard-error")
-p <- add_argument(p, "--odds-ration", help = "Column name for Odds-ratio")
-p <- add_argument(p, "--variant-id", help = "Column name for SNP id")
+p <-
+  add_argument(p, "--file-name", help = "Name of the summary statistics file")
+p <-
+  add_argument(p, "--id-snplist-file", help = "file with list of SNPs for which Z-score will be calculated")
+p <-
+  add_argument(p, "--std-error", help = "Column name for Standard-error")
+p <-
+  add_argument(p, "--odds-ration", help = "Column name for Odds-ratio")
+p <-
+  add_argument(p, "--variant-id", help = "Column name for SNP id")
 p <- add_argument(p, "--z-file-name", help = "Output file name")
 
 argv <- parse_args(p)
 
-data_summary_stats <- read.table(argv$f, sep = " ", header = TRUE)
-snp_list <- read.table(argv$i, header = FALSE)
-data_summary_stats_subset <- data_summary_stats[data_summary_stats$argv$v == snp_list]
-calc_z-score <- function(data_summary_stats_subset, std_error, odds_ratio){
-  for (snp in 1: length(data_summary_stats_subset) {   
-    data_summary_stats_subset$z-score[snp] <- log(data_summary_stats_subset$odds_ratio[snp]) / (log(data_summary_stats_subset$odds_ratio[snp]) - (data_summary_stats_subset$odds_ratio[snp] * exp(-1.96 * data_summary_stats_subset$std_error[snp]) / 1.96))) 
+data_summary_stats <- fread(argv$f, sep = "\t", header = TRUE)
+snp_list <- fread(argv$i, header = FALSE)
+colnames(snp_list) <- c(argv$v)
+data_summary_stats_subset <-
+  semi_join(data_summary_stats, snp_list, by = argv$v)
+dim(data_summary_stats_subset)
+print(data_summary_stats_subset)
+odds_ratio <- c(argv$o)
+std_error <- c(argv$s)
+calc_z_score <-
+  function(...) {
+    data_summary_stats_subset[[odds_ratio]] <-
+      as.numeric(data_summary_stats_subset[[odds_ratio]])
+    data_summary_stats_subset[[std_error]] <-
+      as.numeric(data_summary_stats_subset[[std_error]])
+    log.OR <- log(data_summary_stats_subset[[odds_ratio]])
+    lower95.log.OR <-
+      (
+        data_summary_stats_subset[[odds_ratio]] * exp(-1.96 * data_summary_stats_subset[[std_error]])
+      )
+    SE.log.OR <- (log.OR - lower95.log.OR) / 1.96
+    data_summary_stats_subset$Z_score <- (log.OR / SE.log.OR)
+    return(data_summary_stats_subset$Z_score)
   }
-  return(data_summary_stats_subset$z-score)
-}
-out_file <- calc_z-score(data_summary_stats_subset, argv$s, argv$o)
-write.csv(out_file, "argv$z", sep = " ", header = "TRUE")
+out_file <- calc_z_score(odds_ratio, std_error)
+out_file <- data.frame(out_file)
+colnames(out_file) <- c("Z-score")
+fwrite(out_file, argv$z)
