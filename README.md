@@ -1,5 +1,5 @@
 # Z-score calculation from GWAS summary statistics for a given set of SNPs
-This R-script calculates Z-scores (required for post GWAS analysis like fine-mapping & colocalization analysis) from summary statistics file using Beta values (odds-ratio) and standard error (of odds ratio) for a given set of SNPs. The SNPs as input should be given as a text file with just one column and no header. 
+This R-script calculates Z-scores (required for post GWAS analysis like fine-mapping & colocalization analysis) from summary statistics file using Beta values (odds-ratio) and standard error (of odds ratio) for a given set of SNPs. The summary statistics input file should be tab seperated. The SNPs as input should be given as a text file with just one column and no header. 
 
 ### Pull this repository
 Go to your working directory and run:
