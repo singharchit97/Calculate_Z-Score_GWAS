@@ -10,11 +10,11 @@ p <-
 p <-
   add_argument(p, "--id-snplist-file", help = "file with list of SNPs for which Z-score will be calculated")
 p <-
-  add_argument(p, "--std-error", help = "Column name for Standard-error")
+  add_argument(p, "--std-error", help = "Column name for Standard-error in the summary-statistics file")
 p <-
-  add_argument(p, "--beta", help = "Column name for Odds-ratio")
+  add_argument(p, "--beta", help = "Column name for Odds-ratio in the summary-statistics file")
 p <-
-  add_argument(p, "--variant-id", help = "Column name for SNP id")
+  add_argument(p, "--variant-id", help = "Column name for SNP id in the summary-statistics file")
 p <- add_argument(p, "--z-file-name", help = "Output file name")
 
 argv <- parse_args(p)
