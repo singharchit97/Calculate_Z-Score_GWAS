@@ -25,9 +25,7 @@ colnames(snp_list) <- c(argv$v)
 data_summary_stats_subset <-
   semi_join(data_summary_stats, snp_list, by = argv$v)
 odds_ratio <- c(argv$b)
-print(odds_ratio)
 std_error <- c(argv$s)
-print(std_error)
 calc_z_score <-
   function(...) {
     data_summary_stats_subset[[odds_ratio]] <-
