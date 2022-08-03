@@ -26,11 +26,9 @@ snp_list <- fread(argv$i, header = FALSE)
 colnames(snp_list) <- c(argv$v)
 data_summary_stats_subset <-
   semi_join(data_summary_stats, snp_list, by = argv$v)
-print(data_summary_stats_subset)
 odds_ratio <- c(argv$b)
 std_error <- c(argv$s)
 stat_choice <- as.numeric(argv$c)
-print(stat_choice)
 calc_z_score <-
   function(...) {
     data_summary_stats_subset[[odds_ratio]] <-
@@ -39,12 +37,7 @@ calc_z_score <-
       as.numeric(data_summary_stats_subset[[std_error]])
     if(stat_choice == 0){
     log.OR <- log(data_summary_stats_subset[[odds_ratio]])
-    lower95.log.OR <-
-      (
-        data_summary_stats_subset[[odds_ratio]] * exp(-1.96 * data_summary_stats_subset[[std_error]])
-      )
-    SE.log.OR <- (log.OR - lower95.log.OR) / 1.96
-    data_summary_stats_subset$Z_score <- (log.OR / SE.log.OR)
+    data_summary_stats_subset$Z_score <- (log.OR / data_summary_stats_subset[[std_error]])
     return(data_summary_stats_subset$Z_score)
     } else{
       data_summary_stats_subset$Z_score <- (data_summary_stats_subset[[odds_ratio]] / data_summary_stats_subset[[std_error]])
