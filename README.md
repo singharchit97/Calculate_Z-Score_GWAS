@@ -17,6 +17,7 @@ export SINGULARITY_PATH="/path/to/singularity-executable"
 sudo $SINGULARITY_PATH/singularity build  z-score.sif container/Singularity
 ```
 ### Run the script (without singularity container)
+If the user has taken care of the dependencies required to run the script:
 Run the below command to see the help message on the input and output parameters required to run the script.
 Note that all parameters are mandatory.
 ```bash
