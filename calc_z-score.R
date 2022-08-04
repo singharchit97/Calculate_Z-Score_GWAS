@@ -37,7 +37,8 @@ calc_z_score <-
       as.numeric(data_summary_stats_subset[[std_error]])
     if(stat_choice == 0){
     log.OR <- log(data_summary_stats_subset[[odds_ratio]])
-    data_summary_stats_subset$Z_score <- (log.OR / data_summary_stats_subset[[std_error]])
+    log.SE <- log(data_summary_stats_subset[[std_error]])
+    data_summary_stats_subset$Z_score <- (log.OR / log.SE)
     return(data_summary_stats_subset$Z_score)
     } else{
       data_summary_stats_subset$Z_score <- (data_summary_stats_subset[[odds_ratio]] / data_summary_stats_subset[[std_error]])
